@@ -96,6 +96,13 @@
     <div class="input-section">
         <form id="payForm">
             <div class="form-group">
+                <label for="payScale">Pay Scale:</label>
+                <select id="payScale">
+                    <option value="2023">Original 2023/24</option>
+                    <option value="2024">Proposed BMA 2024/25</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="grade">Grade:</label>
                 <select id="grade">
                     <option value="FY1">Foundation Doctor Year 1</option>
@@ -194,7 +201,7 @@
 </div>
 
 <script>
-    const basicSalaries = {
+    const basicSalaries2023 = {
         'FY1': 32398,
         'FY2': 37303,
         'ST1-2': 43923,
@@ -202,6 +209,14 @@
         'ST6+': 63152
     };
 
+    const basicSalaries2024 = {
+        'FY1': 36616,
+        'FY2': 42008,
+        'ST1-2': 49909,
+        'ST3-5': 61825,
+        'ST6+': 70425
+    };
+        
     const weekendAllowances = {
         '1 in 2': 0.15,
         '1 in 3': 0.10,
@@ -221,6 +236,7 @@
     };
 
     function calculate() {
+        const payScale = document.getElementById('payScale').value;
         const grade = document.getElementById('grade').value;
         const totalHours = parseFloat(document.getElementById('totalHours').value);
         const enhancedHours = parseFloat(document.getElementById('enhancedHours').value);
@@ -234,6 +250,7 @@
         const pensionOpt = document.getElementById('pensionOpt').value;
         const londonWeight = document.getElementById('londonWeight').value;
 
+        const basicSalaries = payScale === '2024' ? basicSalaries2024 : basicSalaries2023;
         const fullTimeBasicSalary = basicSalaries[grade];
         const ltftFraction = totalHours < 40 ? totalHours / 40 : 1;
         const basicSalary = ltftFraction * fullTimeBasicSalary;
@@ -328,7 +345,7 @@
         const netPay = totalPay - totalDeductions;
 
         const resultsHTML = `
-                <h2>Results</h2>
+                <h2>Results (${payScale === '2024' ? 'Proposed BMA 2024/25' : 'Original 2023/24'})</h2>
                 <table>
                     <tr>
                         <th>Component</th>
