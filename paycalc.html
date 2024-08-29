@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,18 +15,16 @@
         }
         .container {
             display: flex;
+            flex-wrap: wrap;
             background-color: white;
             padding: 10px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .input-section {
-            flex: 1;
-            padding-right: 10px;
-        }
-        .results-section {
-            flex: 1;
-            padding-left: 10px;
+        .input-section, .results-section {
+            flex: 1 1 300px;
+            padding: 10px;
+            box-sizing: border-box;
         }
         h1, h2 {
             color: #333;
@@ -74,6 +73,20 @@
         }
         tr.bold {
             font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .input-section, .results-section {
+                width: 100%;
+            }
+            table {
+                font-size: 14px;
+            }
+            th, td {
+                padding: 8px 4px;
+            }
         }
     </style>
 </head>
@@ -279,7 +292,7 @@
             else pensionRate = 0.125;
         }
         const pensionContribution = totalPay * pensionRate;
-        
+
         // Tax calculation
         let personalAllowance = taxCodeNum * 10;
         if (taxCodeLetter === 'BR' || taxCodeLetter === 'D0' || taxCodeLetter === 'T') {
@@ -287,7 +300,7 @@
         } else if (taxCodeLetter === 'NT') {
             personalAllowance = Number.MAX_SAFE_INTEGER;
         }
-        
+
         const taxableIncome = Math.max(0, totalPay - pensionContribution - personalAllowance);
         let incomeTax = 0;
         if (taxableIncome > 0) {
