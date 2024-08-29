@@ -268,27 +268,7 @@
         const totalPay = basicSalary + additionalHoursPay + enhancedHoursPay + weekendAllowance +
             onCallSupplement + payPremiaNhsAmount + payPremiaAcademicAmount + londonWeightingAmount + ltftAllowance;
 
-        // Tax calculation
-        let personalAllowance = taxCodeNum * 10;
-        if (taxCodeLetter === 'BR' || taxCodeLetter === 'D0' || taxCodeLetter === 'T') {
-            personalAllowance = 0;
-        } else if (taxCodeLetter === 'NT') {
-            personalAllowance = Number.MAX_SAFE_INTEGER;
-        }
-
-        const taxableIncome = Math.max(0, totalPay - personalAllowance);
-        let incomeTax = 0;
-        if (taxableIncome > 0) {
-            if (taxableIncome <= 37700) {
-                incomeTax = taxableIncome * 0.2;
-            } else if (taxableIncome <= 125140) {
-                incomeTax = 37700 * 0.2 + (taxableIncome - 37700) * 0.4;
-            } else {
-                incomeTax = 37700 * 0.2 + 87440 * 0.4 + (taxableIncome - 125140) * 0.45;
-            }
-        }
-
-        // Pension calculation (continued)
+        // Pension calculation
         let pensionRate = 0;
         if (pensionOpt === 'In') {
             if (totalPay < 13260) pensionRate = 0.052;
@@ -299,6 +279,26 @@
             else pensionRate = 0.125;
         }
         const pensionContribution = totalPay * pensionRate;
+        
+        // Tax calculation
+        let personalAllowance = taxCodeNum * 10;
+        if (taxCodeLetter === 'BR' || taxCodeLetter === 'D0' || taxCodeLetter === 'T') {
+            personalAllowance = 0;
+        } else if (taxCodeLetter === 'NT') {
+            personalAllowance = Number.MAX_SAFE_INTEGER;
+        }
+        
+        const taxableIncome = Math.max(0, totalPay - pensionContribution - personalAllowance);
+        let incomeTax = 0;
+        if (taxableIncome > 0) {
+            if (taxableIncome <= 37700) {
+                incomeTax = taxableIncome * 0.2;
+            } else if (taxableIncome <= 125140) {
+                incomeTax = 37700 * 0.2 + (taxableIncome - 37700) * 0.4;
+            } else {
+                incomeTax = 37700 * 0.2 + 87440 * 0.4 + (taxableIncome - 125140) * 0.45;
+            }
+        }
 
         // National Insurance calculation
         const weeklyPay = totalPay / 52;
